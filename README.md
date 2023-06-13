@@ -4,6 +4,27 @@
 ### Env
 - Node v16.20.0
 
+
+### Install
+```sh
+npm i
+
+# typeorm cli를 위한 설치
+npm i -g ts-node
+
+# .env 파일 작성
+cp .env.copy .env
+
+# nest 서버 실행
+nest start --watch
+
+# db migration
+npm run typeorm migration:run
+
+```
+
+
+
 ### TypeOrm
 ```sh
 # package install
@@ -28,3 +49,4 @@ npm run typeorm migration:generate src/migrations/create-posts-table
 npm run typeorm migration:create src/migrations/modify-posts-table
 npm run typeorm migration:generate src/migrations/create-comments-table
 ```
+
