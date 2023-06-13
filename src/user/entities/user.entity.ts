@@ -1,7 +1,17 @@
-import { Entity, Column, PrimaryGeneratedColumn, CreateDateColumn, UpdateDateColumn, DeleteDateColumn, BeforeInsert, OneToMany } from "typeorm";
+import {
+  Entity,
+  Column,
+  PrimaryGeneratedColumn,
+  CreateDateColumn,
+  UpdateDateColumn,
+  DeleteDateColumn,
+  BeforeInsert,
+  OneToMany
+} from "typeorm";
 import { IsEmail, IsString } from 'class-validator';
 import { Exclude } from 'class-transformer';
 import * as argon2 from 'argon2';
+import { Post } from "src/post/entities/post.entity";
 
 @Entity({ name: 'users' })
 export class User {
@@ -31,6 +41,9 @@ export class User {
   @DeleteDateColumn({ name: 'deleted_at' })
   deletedAt: Date;
 
+  @OneToMany(type => Post, post => post.user)
+  posts: Post[];
+  
   @BeforeInsert()
   async hashPassword() {
     this.password = await argon2.hash(this.password);
