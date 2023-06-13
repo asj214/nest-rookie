@@ -36,6 +36,10 @@ export class User {
     this.password = await argon2.hash(this.password);
   }
 
+  async verifyPassword(password: string) {
+    return await argon2.verify(this.password, password)
+  }
+
   constructor(partial?: Partial<User>) {
     if (partial) Object.assign(this, partial);
   }

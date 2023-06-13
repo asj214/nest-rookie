@@ -1,26 +1,67 @@
-import { Injectable } from '@nestjs/common';
-import { CreateAuthDto } from './dto/create-auth.dto';
-import { UpdateAuthDto } from './dto/update-auth.dto';
+import { Injectable, BadRequestException, NotFoundException } from '@nestjs/common';
+import { Repository } from 'typeorm';
+import { JwtService } from '@nestjs/jwt';
+import { InjectRepository } from '@nestjs/typeorm';
+import { AuthRegisterDto, AuthLoginDto } from './dto/auth.dto';
+import { User } from 'src/user/entities/user.entity';
 
 @Injectable()
 export class AuthService {
-  create(createAuthDto: CreateAuthDto) {
-    return 'This action adds a new auth';
+  constructor(
+    @InjectRepository(User)
+    private readonly userRepository: Repository<User>,
+    private jwtService: JwtService
+  ) {}
+
+  async create(dto: AuthRegisterDto) {
+    const { email, name, password } = dto;
+    const isExist = await this.userRepository.findOne({
+      where: {
+        email: email
+      }
+    })
+
+    if (isExist) throw new BadRequestException();
+
+    const user = new User();
+    user.email = email;
+    user.name = name;
+    user.password = password;
+
+    return await this.userRepository.save(user);
   }
 
-  findAll() {
-    return `This action returns all auth`;
+  async authenticate({ email, password }: AuthLoginDto) {
+    const user = await this.userRepository.findOne({
+      where: {
+        email: email
+      }
+    });
+
+    if (!user) throw new NotFoundException();
+
+    if (!user.verifyPassword(password)) {
+      throw new NotFoundException();
+    }
+
+    return {
+      token: this.generateJWT(user)
+    }
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} auth`;
+  generateJWT(user: User) {
+    return this.jwtService.sign({
+      id: user.id,
+      name: user.name,
+      email: user.email
+    });
   }
 
-  update(id: number, updateAuthDto: UpdateAuthDto) {
-    return `This action updates a #${id} auth`;
-  }
-
-  remove(id: number) {
-    return `This action removes a #${id} auth`;
+  async findOne(id: number) {
+    return await this.userRepository.findOne({
+      where: {
+        id: id
+      }
+    });
   }
 }
