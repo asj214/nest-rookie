@@ -6,6 +6,7 @@ import { AppService } from './app.service';
 import { UserModule } from './user/user.module';
 import { AuthModule } from './auth/auth.module';
 import { PostModule } from './post/post.module';
+import { CategoryModule } from './category/category.module';
 import typeORMConfig from 'ormconfig';
 
 @Module({
@@ -18,6 +19,7 @@ import typeORMConfig from 'ormconfig';
     UserModule,
     AuthModule,
     PostModule,
+    CategoryModule,
   ],
   controllers: [AppController],
   providers: [AppService],
