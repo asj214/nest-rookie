@@ -16,12 +16,15 @@ export class CreateCategoriesTable1686717845752 implements MigrationInterface {
           {
             name: "id",
             type: "int",
-            isPrimary: true
+            isPrimary: true,
+            isGenerated: true,
+            generationStrategy: "increment",
           },
           {
             name: "parent_id",
             type: "int",
-            default: null
+            default: null,
+            isNullable: true
           },
           {
             name: "user_id",

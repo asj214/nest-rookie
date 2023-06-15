@@ -12,9 +12,13 @@ export class CategoryService {
   ) {}
 
   async findDepth(parentId: number) {
-    if (!parentId) return null
-    const parent = await this.categoryRepository.findOneBy({ id: parentId });
-    return parent.depth + 1
+    if (parentId) {
+      const parent = await this.categoryRepository.findOneBy({ id: parentId });
+      if (!parent) throw new NotFoundException(`Not Found Parent Id : ${parentId}`);
+      return parent.depth + 1
+    }
+
+    return 1
   }
 
   async create(user, dto: CreateCategoryDto) {
@@ -28,28 +32,9 @@ export class CategoryService {
 
     const ret = await this.categoryRepository.save(category);
 
-    // this.setCategoryPath();
+    this.setCategoryPath();
 
     return ret
-  }
-
-  generateTree(rows: Category[], parentId: number = null, depth: number = 0) {
-    const ret = [];
-    for (const i in rows) {
-      if (rows[i].depth != depth || parentId != rows[i].parentId) continue
-      ret.push({
-        id: rows[i].id,
-        parentId: rows[i].parentId,
-        name: rows[i].name,
-        depth: rows[i].depth,
-        order: rows[i].order,
-        path: rows[i].path,
-        createdAt: rows[i].createdAt,
-        updatedAt: rows[i].updatedAt,
-        children: this.generateTree(rows, rows[i].id, rows[i].depth + 1)
-      });
-    }
-    return ret;
   }
 
   async findAll() {
@@ -69,11 +54,53 @@ export class CategoryService {
     return category
   }
 
-  update(id: number, dto: UpdateCategoryDto) {
-    return `This action updates a #${id} category`;
+  async update(id: number, dto: UpdateCategoryDto) {
+    await this.categoryRepository.update(id, dto);
+    this.setCategoryPath();
+    return await this.findOne(id);
   }
 
   async remove(id: number) {
     return await this.categoryRepository.softDelete({ id: id });
+  }
+
+  generateTree(rows: Category[], parentId: number = null, depth: number = 1) {
+    return rows
+    .filter((row) => row.depth === depth && parentId === row.parentId)
+    .map((row) => ({
+      id: row.id,
+      parentId: row.parentId,
+      name: row.name,
+      depth: row.depth,
+      order: row.order,
+      path: row.path,
+      createdAt: row.createdAt,
+      updatedAt: row.updatedAt,
+      children: this.generateTree(rows, row.id, row.depth + 1),
+    }));
+  }
+
+  async setCategoryPath() {
+    const categories = await this.categoryRepository.find();
+    for (const i in categories) {
+      const path = await this.findChildren(categories[i].id);
+      await this.categoryRepository.update(categories[i].id, {
+        path: path
+      });
+    }
+  }
+
+  async findChildren(id: number) {
+    let ret = [id];
+    const categories = await this.categoryRepository.findBy({
+      parentId: id
+    });
+
+    for (const i in categories) {
+      const child = await this.findChildren(categories[i].id)
+      ret = [...ret, ...child]
+    }
+
+    return ret
   }
 }

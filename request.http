@@ -50,3 +50,21 @@ Authorization: Bearer {{ token }}
   "title": "Hello World",
   "body": "My Father Goes To The Market With Donkey"
 }
+
+
+###
+GET {{ BASE_URL }}/categories
+Content-Type: application/json
+Authorization: Bearer {{ token }}
+
+
+###
+GET {{ BASE_URL }}/categories/1
+Content-Type: application/json
+Authorization: Bearer {{ token }}
+
+
+###
+DELETE {{ BASE_URL }}/categories/5
+Content-Type: application/json
+Authorization: Bearer {{ token }}
