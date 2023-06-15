@@ -12,6 +12,7 @@ import { IsEmail, IsString } from 'class-validator';
 import { Exclude } from 'class-transformer';
 import * as argon2 from 'argon2';
 import { Post } from "src/post/entities/post.entity";
+import { Category } from "src/category/entities/category.entity";
 
 @Entity({ name: 'users' })
 export class User {
@@ -43,6 +44,9 @@ export class User {
 
   @OneToMany(type => Post, post => post.user)
   posts: Post[];
+
+  @OneToMany(type => Category, category => category.user)
+  categories: Category[];
   
   @BeforeInsert()
   async hashPassword() {
