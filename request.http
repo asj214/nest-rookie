@@ -1,0 +1,70 @@
+@BASE_URL = http://localhost:3000/api
+
+###
+GET {{ BASE_URL }}
+Content-Type: application/json
+
+
+###
+POST {{ BASE_URL }}/auth/register
+Content-Type: application/json
+
+{
+  "email": "asj214@naver.com",
+  "name": "sjahn",
+  "password": "rewq1234"
+}
+
+
+###
+# @name authentication
+POST {{ BASE_URL }}/auth/login
+Content-Type: application/json
+
+{
+  "email": "asj214@naver.com",
+  "password": "rewq1234"
+}
+
+###
+@token = {{ authentication.response.body.token }}
+
+
+###
+GET {{ BASE_URL }}/auth/me
+Content-Type: application/json
+Authorization: Bearer {{ token }}
+
+
+###
+GET {{ BASE_URL }}/posts?skip=0
+Content-Type: application/json
+Authorization: Bearer {{ token }}
+
+###
+POST {{ BASE_URL }}/posts
+Content-Type: application/json
+Authorization: Bearer {{ token }}
+
+{
+  "title": "Hello World",
+  "body": "My Father Goes To The Market With Donkey"
+}
+
+
+###
+GET {{ BASE_URL }}/categories
+Content-Type: application/json
+Authorization: Bearer {{ token }}
+
+
+###
+GET {{ BASE_URL }}/categories/1
+Content-Type: application/json
+Authorization: Bearer {{ token }}
+
+
+###
+DELETE {{ BASE_URL }}/categories/5
+Content-Type: application/json
+Authorization: Bearer {{ token }}
