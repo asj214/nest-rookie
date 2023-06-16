@@ -8,33 +8,41 @@ import {
   BeforeInsert,
   OneToMany
 } from "typeorm";
-import { IsEmail, IsString } from 'class-validator';
 import { Exclude } from 'class-transformer';
+import { IsEmail, IsString } from 'class-validator';
+import { Field, ObjectType } from '@nestjs/graphql';
 import * as argon2 from 'argon2';
 import { Post } from "src/post/entities/post.entity";
 import { Category } from "src/category/entities/category.entity";
 
+@ObjectType()
 @Entity({ name: 'users' })
 export class User {
+  @Field(() => Number)
   @PrimaryGeneratedColumn('increment')
   id: number;
 
   @Column({ unique: true })
   @IsEmail()
+  @Field(() => String)
   email: string;
 
   @Column()
   @IsString()
+  @Field(() => String)
   name: string;
 
   @Column()
   @Exclude()
   @IsString()
+  @Field(() => String)
   password: string;
 
+  @Field()
   @CreateDateColumn({ name: 'created_at' })
   createdAt: Date;
 
+  @Field()
   @UpdateDateColumn({ name: 'updated_at' })
   updatedAt: Date;
 

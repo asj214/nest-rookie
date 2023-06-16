@@ -13,9 +13,6 @@ import typeORMConfig from 'ormconfig';
 
 @Module({
   imports: [
-    // GraphQLModule.forRoot<ApolloDriverConfig>({
-    //   driver: ApolloDriver,
-    // }),
     ConfigModule.forRoot({
       isGlobal: true,
       envFilePath: '.env',
@@ -25,6 +22,12 @@ import typeORMConfig from 'ormconfig';
     AuthModule,
     PostModule,
     CategoryModule,
+    GraphQLModule.forRoot<ApolloDriverConfig>({
+      autoSchemaFile: true,
+      playground: true,
+      driver: ApolloDriver,
+      include: [UserModule, PostModule],
+    }),
   ],
   controllers: [AppController],
   providers: [AppService],
