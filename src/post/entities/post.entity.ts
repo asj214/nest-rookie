@@ -53,3 +53,11 @@ export class Post {
     if (partial) Object.assign(this, partial);
   }
 }
+
+@ObjectType()
+export class ResponseData {
+  @Field()
+  count: number;
+  @Field()
+  data: Post[];
+}

@@ -29,17 +29,17 @@ export class PostService {
 
     qb.where('1=1')
     if (keyword) {
-      qb.andWhere('post.title LIKE :keyword', { name: `%${keyword}%` })
-      qb.andWhere('post.body LIKE :keyword', { name: `%${keyword}%` })
+      qb.andWhere('post.title LIKE :keyword', { keyword: `%${keyword}%` })
+      qb.andWhere('post.body LIKE :keyword', { keyword: `%${keyword}%` })
     }
 
     qb.orderBy('post.id', 'DESC');
-
-    const count = await qb.getCount();
     qb.take(take);
     qb.skip(skip)
 
+    const count = await qb.getCount();
     const data = await qb.getMany();
+
     return {
       count: count,
       data: data
