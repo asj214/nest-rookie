@@ -1,4 +1,5 @@
-import { Module } from '@nestjs/common';
+import { Module, ValidationPipe } from '@nestjs/common';
+import { APP_PIPE } from "@nestjs/core";
 import { ConfigModule } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { GraphQLModule } from '@nestjs/graphql';
@@ -26,10 +27,24 @@ import typeORMConfig from 'ormconfig';
       autoSchemaFile: true,
       playground: true,
       driver: ApolloDriver,
+      context: ({ req, connection }) => {
+        if (req) {
+          const user = req.headers.authorization;
+          return { ...req, user };
+        } else {
+          return connection;
+        }
+      },
       include: [UserModule, PostModule],
     }),
   ],
   controllers: [AppController],
-  providers: [AppService],
+  providers: [
+    AppService,
+    {
+      provide: APP_PIPE,
+      useClass: ValidationPipe,
+    }
+  ],
 })
 export class AppModule {}

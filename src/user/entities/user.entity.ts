@@ -10,7 +10,7 @@ import {
 } from "typeorm";
 import { Exclude } from 'class-transformer';
 import { IsEmail, IsString } from 'class-validator';
-import { Field, ObjectType } from '@nestjs/graphql';
+import { Field, ObjectType, Int } from '@nestjs/graphql';
 import * as argon2 from 'argon2';
 import { Post } from "src/post/entities/post.entity";
 import { Category } from "src/category/entities/category.entity";
@@ -18,7 +18,7 @@ import { Category } from "src/category/entities/category.entity";
 @ObjectType()
 @Entity({ name: 'users' })
 export class User {
-  @Field(() => Number)
+  @Field(() => Int)
   @PrimaryGeneratedColumn('increment')
   id: number;
 
