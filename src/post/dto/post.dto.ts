@@ -1,9 +1,10 @@
 import { PartialType } from '@nestjs/mapped-types';
 import {
+  Min,
+  Length,
   IsNumber,
   IsString,
   IsOptional,
-  Min
 } from 'class-validator';
 import { InputType, Int, Field } from '@nestjs/graphql';
 import { Transform } from 'class-transformer';
@@ -51,9 +52,9 @@ export class PostDto {
     description: '제목',
     required: true,
   })
-  @Min(5)
-  @IsString()
   @Field()
+  @IsString()
+  @Length(5, 255)
   title: string;
 
   @ApiProperty({
@@ -61,7 +62,7 @@ export class PostDto {
     description: '본문',
     required: true,
   })
-  @Min(5)
+  // @Min(5)
   @IsString()
   @Field()
   body: string;

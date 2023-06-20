@@ -10,13 +10,13 @@ import {
 } from "typeorm";
 import { Exclude } from 'class-transformer';
 import { IsString, Min } from 'class-validator';
-import { Field, ObjectType } from '@nestjs/graphql';
+import { Field, ObjectType, Int } from '@nestjs/graphql';
 import { User } from "src/user/entities/user.entity";
 
 @ObjectType()
 @Entity({ name: 'posts' })
 export class Post {
-  @Field(() => Number)
+  @Field(() => Int)
   @PrimaryGeneratedColumn('increment')
   id: number;
 
@@ -56,8 +56,8 @@ export class Post {
 
 @ObjectType()
 export class ResponseData {
-  @Field()
+  @Field(() => Int)
   count: number;
-  @Field()
+  @Field(() => [Post])
   data: Post[];
 }
