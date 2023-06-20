@@ -27,6 +27,14 @@ import typeORMConfig from 'ormconfig';
       autoSchemaFile: true,
       playground: true,
       driver: ApolloDriver,
+      context: ({ req, connection }) => {
+        if (req) {
+          const user = req.headers.authorization;
+          return { ...req, user };
+        } else {
+          return connection;
+        }
+      },
       include: [UserModule, PostModule],
     }),
   ],
