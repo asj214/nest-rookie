@@ -33,4 +33,10 @@ export class PostResolver {
   async createPost(@Context() context, @Args('dto') dto: PostDto) {
     return await this.postService.create(context.req.user, dto);
   }
+
+  @Mutation(() => Post)
+  @UseGuards(GqlAuthGuard)
+  async updatePost(@Context() context, @Args('id') id: number, @Args('dto') dto: PostDto) {
+    return await this.postService.update(context.req.user, id, dto);
+  }
 }
