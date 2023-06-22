@@ -1,4 +1,4 @@
-import { Body, Request, UseGuards, UsePipes, ValidationPipe } from '@nestjs/common';
+import { UseGuards, UsePipes, ValidationPipe } from '@nestjs/common';
 import { Query, Resolver, Mutation, Context, Args } from '@nestjs/graphql';
 import { GqlAuthGuard } from 'src/auth/gql.auth.guard';
 import { PostService } from './post.service';
@@ -39,4 +39,12 @@ export class PostResolver {
   async updatePost(@Context() context, @Args('id') id: number, @Args('dto') dto: PostDto) {
     return await this.postService.update(context.req.user, id, dto);
   }
+
+  @Mutation(() => Boolean)
+  @UseGuards(GqlAuthGuard)
+  async deletePost(@Args('id') id: number) {
+    await this.postService.remove(id);
+    return true;
+  }
+
 }
