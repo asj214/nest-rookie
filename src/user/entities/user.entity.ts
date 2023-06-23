@@ -14,6 +14,7 @@ import { Field, ObjectType, Int } from '@nestjs/graphql';
 import * as argon2 from 'argon2';
 import { Post } from "src/post/entities/post.entity";
 import { Category } from "src/category/entities/category.entity";
+import { Product } from "src/product/entities/product.entity";
 
 @ObjectType()
 @Entity({ name: 'users' })
@@ -55,7 +56,10 @@ export class User {
 
   @OneToMany(type => Category, category => category.user)
   categories: Category[];
-  
+
+  @OneToMany(type => Product, product => product.user)
+  products: Product[];
+
   @BeforeInsert()
   async hashPassword() {
     this.password = await argon2.hash(this.password);

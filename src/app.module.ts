@@ -10,6 +10,7 @@ import { UserModule } from './user/user.module';
 import { AuthModule } from './auth/auth.module';
 import { PostModule } from './post/post.module';
 import { CategoryModule } from './category/category.module';
+import { ProductModule } from './product/product.module';
 import typeORMConfig from 'ormconfig';
 
 @Module({
@@ -37,6 +38,7 @@ import typeORMConfig from 'ormconfig';
       },
       include: [UserModule, PostModule],
     }),
+    ProductModule,
   ],
   controllers: [AppController],
   providers: [
