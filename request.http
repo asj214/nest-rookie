@@ -59,6 +59,17 @@ Authorization: Bearer {{ token }}
 
 
 ###
+POST {{ BASE_URL }}/categories
+Content-Type: application/json
+Authorization: Bearer {{ token }}
+
+{
+  "parentId": 2,
+  "name": "ROOT, First Grand Child"
+}
+
+
+###
 GET {{ BASE_URL }}/categories/1
 Content-Type: application/json
 Authorization: Bearer {{ token }}
@@ -66,5 +77,30 @@ Authorization: Bearer {{ token }}
 
 ###
 DELETE {{ BASE_URL }}/categories/5
+Content-Type: application/json
+Authorization: Bearer {{ token }}
+
+
+###
+GET {{ BASE_URL }}/products?categoryId=3&name=No.1
+Content-Type: application/json
+Authorization: Bearer {{ token }}
+
+
+###
+POST {{ BASE_URL }}/products
+Content-Type: application/json
+Authorization: Bearer {{ token }}
+
+{
+  "name": "Product Name Example",
+  "price": 15000,
+  "description": "This is Product Detail Infomation",
+  "categoryIds": [2]
+}
+
+
+###
+GET {{ BASE_URL }}/products/2
 Content-Type: application/json
 Authorization: Bearer {{ token }}
